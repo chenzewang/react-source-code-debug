@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // "shared/*": [
+      //   "src/react/v17/shared/*"
+      // ],
+      // "react-reconciler/src/*": [
+      //   "src/react/v17/react-reconciler/src/*"
+      // ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "src/react"
+  ]
+}
