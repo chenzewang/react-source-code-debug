@@ -204,7 +204,8 @@ type BaseFiberRootProperties = {|
 
   // Node returned by Scheduler.scheduleCallback. Represents the next rendering
   // task that the root will work on.
-  callbackNode: *,
+  // 由 Scheduler.scheduleCallback 返回的节点。表示根节点将要处理的下一个渲染任务。
+  callbackNode: mixed | null,
   callbackPriority: LanePriority,
   eventTimes: LaneMap<number>,
   expirationTimes: LaneMap<number>,

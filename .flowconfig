@@ -1,10 +1,10 @@
 [ignore]
 .*/node_modules/.*
-src/react/v16.12.0/.*
-src/react/v16.13.1/.*
-src/react/v17.0.0-alpha.0/.*
-src/react/v18/.*
-src/react/v18.3.1/.*
+.*/src/react/v16.12.0/.*
+.*/src/react/v16.13.1/.*
+.*/src/react/v17.0.0-alpha.0/.*
+.*/src/react/v18/.*
+.*/src/react/v18.3.1/.*
 
 [include]
 src/react/v17/.*
@@ -15,10 +15,15 @@ src/react/v17/.*
 flow-typed/globals.js
 
 [lints]
-; signature-verification-failure=off
+all=warn
+untyped-type-import=error
+sketchy-null-bool=off
+; signature-verification-failure=warn
+; unsupported-syntax=warn
 
 [options]
 module.name_mapper='^shared\/\(.*\)$' -> '<PROJECT_ROOT>/src/react/v17/shared/\1'
 module.name_mapper='^react-reconciler\/src\/\(.*\)$' -> '<PROJECT_ROOT>/src/react/v17/react-reconciler/src/\1'
 module.name_mapper='^react\/src\/\(.*\)$' -> '<PROJECT_ROOT>/src/react/v17/react/src/\1'
 module.name_mapper='^scheduler\/\(.*\)$' -> '<PROJECT_ROOT>/src/react/v17/scheduler/\1'
+module.name_mapper='^react-dom\/\(.*\)$' -> '<PROJECT_ROOT>/src/react/v17/react-dom/\1'
