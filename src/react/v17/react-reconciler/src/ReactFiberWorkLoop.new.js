@@ -1565,7 +1565,7 @@ function renderRootSync(root: FiberRoot, lanes: Lanes) {
   return workInProgressRootExitStatus;
 }
 
-// The work loop is an extremely hot path. Tell Closure not to inline it.
+// 工作循环是一个极其热门的路径。告诉 Closure 不要内联它。
 /** @noinline */
 function workLoopSync() {
   // Already timed out, so perform work without checking if we need to yield.
@@ -1655,6 +1655,8 @@ function performUnitOfWork(unitOfWork: Fiber): void {
   // The current, flushed, state of this fiber is the alternate. Ideally
   // nothing should rely on this, but relying on it here means that we don't
   // need an additional field on the work in progress.
+  // [译注] 这个fiber当前已刷新的状态是其alternate。理想情况下不应该依赖这个特性,
+  // 但在这里依赖它意味着我们不需要在work in progress上添加额外的字段。
   const current = unitOfWork.alternate;
   setCurrentDebugFiberInDEV(unitOfWork);
 

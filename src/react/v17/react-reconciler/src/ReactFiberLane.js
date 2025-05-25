@@ -730,6 +730,9 @@ export function pickArbitraryLane(lanes: Lanes): Lane {
   // doesn't matter which bit is selected; you can pick any bit without
   // affecting the algorithms where its used. Here I'm using
   // getHighestPriorityLane because it requires the fewest operations.
+  // 这个包装函数会被内联。它的存在只是为了表明选择哪个位并不重要；
+  // 你可以选择任意一位而不会影响使用它的算法。这里我使用
+  // getHighestPriorityLane 是因为它需要的操作最少。
   return getHighestPriorityLane(lanes);
 }
 

@@ -1033,6 +1033,16 @@ function finishClassComponent(
   return workInProgress.child;
 }
 
+/**
+ * 推送 HostRoot 的上下文信息到栈中
+ * 
+ * 该函数主要完成以下工作:
+ * 1. 如果存在 pendingContext,将其作为顶层上下文对象推入栈中
+ * 2. 如果只有普通 context,将其推入栈中
+ * 3. 推入 container 相关信息
+ *
+ * @param {Fiber} workInProgress - 当前正在处理的 fiber 节点
+ */
 function pushHostRootContext(workInProgress) {
   const root = (workInProgress.stateNode: FiberRoot);
   if (root.pendingContext) {
@@ -3075,6 +3085,19 @@ function remountFiber(
   }
 }
 
+/**
+ * beginWork 是 React Fiber 架构中的核心函数之一。它负责开始处理一个 Fiber 节点的工作。
+ * 主要功能包括:
+ * 1. 根据 current fiber 和 workInProgress fiber 判断是否需要更新
+ * 2. 如果需要更新,则根据 fiber.tag 调用相应的更新函数
+ * 3. 如果不需要更新,则尝试复用已有的 fiber 节点(bailout 过程)
+ * 4. 返回下一个需要处理的子 fiber 节点
+ *
+ * @param {Fiber | null} current - 当前存在于 DOM 树中的 Fiber 节点
+ * @param {Fiber} workInProgress - 正在构建的新的 Fiber 节点
+ * @param {Lanes} renderLanes - 本次渲染的优先级
+ * @returns {Fiber | null} 返回子 Fiber 节点或 null
+ */
 function beginWork(
   current: Fiber | null,
   workInProgress: Fiber,
@@ -3112,12 +3135,16 @@ function beginWork(
     ) {
       // If props or context changed, mark the fiber as having performed work.
       // This may be unset if the props are determined to be equal later (memo).
+      // 如果 props 或 context 发生变化，将该 fiber 标记为已执行工作。
+      // 如果后续确定 props 相等，这个标记可能会被取消 (memo)。
       didReceiveUpdate = true;
     } else if (!includesSomeLane(renderLanes, updateLanes)) {
       didReceiveUpdate = false;
-      // This fiber does not have any pending work. Bailout without entering
-      // the begin phase. There's still some bookkeeping we that needs to be done
-      // in this optimized path, mostly pushing stuff onto the stack.
+        // This fiber does not have any pending work. Bailout without entering
+        // the begin phase. There's still some bookkeeping we that needs to be done
+        // in this optimized path, mostly pushing stuff onto the stack.
+        // 这个 fiber 没有任何待处理的工作。无需进入 begin 阶段就可以直接退出。
+        // 在这个优化路径中，仍然需要做一些记录工作，主要是将一些内容推入栈中。
       switch (workInProgress.tag) {
         case HostRoot:
           pushHostRootContext(workInProgress);
