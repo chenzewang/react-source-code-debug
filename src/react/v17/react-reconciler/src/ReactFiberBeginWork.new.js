@@ -242,6 +242,10 @@ export function reconcileChildren(
     // won't update its child set by applying minimal side-effects. Instead,
     // we will add them all to the child before it gets rendered. That means
     // we can optimize this reconciliation pass by not tracking side-effects.
+    // 如果这是一个还没有被渲染过的全新组件，我们
+    // 不会通过应用最小副作用来更新它的子节点集合。相反，
+    // 我们会在它被渲染之前将所有子节点添加到子节点中。这意味着
+    // 我们可以通过不跟踪副作用来优化这个协调过程。
     workInProgress.child = mountChildFibers(
       workInProgress,
       null,
@@ -252,9 +256,14 @@ export function reconcileChildren(
     // If the current child is the same as the work in progress, it means that
     // we haven't yet started any work on these children. Therefore, we use
     // the clone algorithm to create a copy of all the current children.
+    // 如果当前子节点与正在进行的工作相同，这意味着
+    // 我们还没有开始对这些子节点进行任何工作。因此，我们使用
+    // 克隆算法来创建所有当前子节点的副本。
 
     // If we had any progressed work already, that is invalid at this point so
     // let's throw it out.
+    // 如果我们已经有任何进行中的工作，那么在这一点上是无效的，所以
+    // 让我们把它丢弃。
     workInProgress.child = reconcileChildFibers(
       workInProgress,
       current.child,
@@ -697,13 +706,30 @@ function markRef(current: Fiber | null, workInProgress: Fiber) {
   }
 }
 
+/**
+ * 更新函数组件
+ * 
+ * 该函数负责处理函数组件的更新逻辑,包括:
+ * 1. 在开发环境下验证组件的props类型
+ * 2. 处理legacy context
+ * 3. 调用renderWithHooks执行函数组件的渲染
+ * 4. 处理bailout优化
+ * 5. 调和子节点
+ *
+ * @param {Fiber|null} current - 当前fiber节点
+ * @param {Fiber} workInProgress - 工作中的fiber节点
+ * @param {Function} Component - 函数组件定义
+ * @param {any} nextProps - 新的props
+ * @param {Lanes} renderLanes - 渲染优先级
+ * @returns {Fiber|null} 返回子fiber节点
+ */
 function updateFunctionComponent(
-  current,
-  workInProgress,
-  Component,
+  current: Fiber | null,
+  workInProgress: Fiber,
+  Component: any,
   nextProps: any,
-  renderLanes,
-) {
+  renderLanes: Lanes,
+): Fiber | null {
   if (__DEV__) {
     if (workInProgress.type !== workInProgress.elementType) {
       // Lazy component props can't be validated in createElement
@@ -1058,7 +1084,11 @@ function pushHostRootContext(workInProgress) {
   pushHostContainer(workInProgress, root.containerInfo);
 }
 
-function updateHostRoot(current, workInProgress, renderLanes) {
+function updateHostRoot(
+  current: Fiber | null,
+  workInProgress: Fiber,
+  renderLanes: Lanes,
+): Fiber | null {
   pushHostRootContext(workInProgress);
   const updateQueue = workInProgress.updateQueue;
   invariant(

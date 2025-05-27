@@ -23,7 +23,6 @@
     "eslint": "^6.6.0",
     "eslint-config-react-app": "^5.2.1",
     "eslint-loader": "3.0.3",
-    "eslint-plugin-flowtype": "5.10.0",
     "eslint-plugin-import": "2.20.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.19.0",
@@ -149,7 +148,6 @@
     "@babel/plugin-transform-flow-strip-types": "^7.10.1",
     "cross-env": "^7.0.2",
     "flow-bin": "^0.217.0",
-    "@babel/preset-flow": "^7.23.3",
-    "eslint-plugin-flowtype": "^8.0.3"
+    "@babel/preset-flow": "^7.23.3"
   }
 }

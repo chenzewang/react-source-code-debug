@@ -687,6 +687,28 @@ function cutOffTailIfNeeded(
   }
 }
 
+/**
+ * bubbleProperties 函数是 React Fiber 架构中一个重要的工具函数。
+ * 它的主要作用是遍历子 Fiber 节点，收集childLanes、subtreeFlags、flags，并冒泡到父节点。这个过程非常重要,原因如下:
+ * 
+ * 1. 优化性能:
+ * - 通过向上冒泡 childLanes,React 可以快速判断子树是否需要更新,避免不必要的遍历
+ * - 父节点可以通过 subtreeFlags 快速知道子树中是否有副作用,从而跳过无需处理的子树
+ * 
+ * 2. 维护树的状态:
+ * - 收集所有子节点的 lanes,确保调度系统能正确处理优先级
+ * - 合并子树的副作用标记,保证 commit 阶段能处理所有必要的更新
+ * 
+ * 3. 性能分析:
+ * - 在 Profiler 模式下收集渲染时间信息
+ * - 计算实际渲染时间(actualDuration)和基准时间(treeBaseDuration)
+ * 
+ * 4. 优化路径:
+ * - 支持 bailout 优化,在可以复用的情况下只收集静态标记
+ * - 减少不必要的属性收集和计算
+ * 
+ * 这个函数是连接 Fiber 树各个节点的关键,确保了 React 可以正确且高效地进行更新。
+ */
 function bubbleProperties(completedWork: Fiber) {
   const didBailout =
     completedWork.alternate !== null &&
@@ -729,6 +751,8 @@ function bubbleProperties(completedWork: Fiber) {
       completedWork.actualDuration = actualDuration;
       completedWork.treeBaseDuration = treeBaseDuration;
     } else {
+      // 遍历每一个child ，收集childLanes、subtreeFlags、flags
+
       let child = completedWork.child;
       while (child !== null) {
         newChildLanes = mergeLanes(
@@ -797,6 +821,20 @@ function bubbleProperties(completedWork: Fiber) {
   return didBailout;
 }
 
+/**
+ * 完成工作单元的处理,处理完成后return下一个工作单元
+ * 
+ * 主要功能:
+ * 1. 根据不同的组件类型进行相应的处理
+ * 2. 处理组件的副作用(如更新DOM、调用生命周期等)
+ * 3. 冒泡子树的属性(如lanes、flags等)到父节点
+ * 4. 处理ref、context等特殊情况
+ * 
+ * @param {Fiber | null} current - 当前fiber节点对应的上一次渲染的fiber节点
+ * @param {Fiber} workInProgress - 当前正在处理的fiber节点
+ * @param {Lanes} renderLanes - 本次渲染的优先级
+ * @returns {Fiber | null} 返回下一个需要处理的fiber节点,如果没有则返回null
+ */
 function completeWork(
   current: Fiber | null,
   workInProgress: Fiber,

@@ -116,8 +116,15 @@ export type Fiber = {|
   // before its child fibers are created.
   mode: TypeOfMode,
 
-  // Effect
+  /**
+  * Effect   
+  * flag 就是“本节点需要做哪些副作用操作”的标记，commit 阶段会根据 flag 执行实际的 DOM 操作、生命周期、ref 等。
+   */
   flags: Flags,
+   /**
+  * Effect   
+  * flag 就是“本节点需要做哪些副作用操作”的标记，commit 阶段会根据 flag 执行实际的 DOM 操作、生命周期、ref 等。
+   */
   subtreeFlags: Flags,
   deletions: Array<Fiber> | null,
 
@@ -142,6 +149,10 @@ export type Fiber = {|
   // This tells us how well the tree makes use of sCU for memoization.
   // It is reset to 0 each time we render and only updated when we don't bailout.
   // This field is only set when the enableProfilerTimer flag is enabled.
+  // [译注] 渲染此 Fiber 及其后代节点在当前更新中花费的时间。
+  // 这告诉我们树结构对 sCU（shouldComponentUpdate）记忆化的利用程度。
+  // 每次渲染时重置为 0，只有在不进行 bailout 优化时才会更新。
+  // 此字段仅在启用 enableProfilerTimer 标志时设置。
   actualDuration?: number,
 
   // If the Fiber is currently active in the "render" phase,
